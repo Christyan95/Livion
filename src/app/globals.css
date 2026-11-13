@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   SISTEMA DE TEMAS DUAL LIVION
+   1. Tema Padrão (Dark): "Tinta Noturna" (#0F172A) — Conforto noturno profundo
+   2. Tema Claro (Light): "Creme Papiro" (#FAF8F5) — Papel Pólen Soft editorial
+   ========================================================================== */
+:root {
+  --livion-bg-fundo: #0F172A;
+  --livion-bg-card: #162035;
+  --livion-bg-elevado: #1E293B;
+  --livion-borda: rgba(109, 40, 217, 0.32);
+  --livion-texto-principal: #F8FAFC;
+  --livion-texto-secundario: #94A3B8;
+  --livion-texto-apoio: #64748B;
+  --livion-dock-bg: rgba(22, 32, 53, 0.88);
+  --livion-dock-borda: rgba(109, 40, 217, 0.35);
+  --livion-header-bg: rgba(15, 23, 42, 0.88);
+  color-scheme: dark;
+}
+
+html.tema-papiro {
+  --livion-bg-fundo: #FAF8F5;
+  --livion-bg-card: #F2ECE1;
+  --livion-bg-elevado: #E6DEC8;
+  --livion-borda: rgba(109, 40, 217, 0.24);
+  --livion-texto-principal: #1E293B;
+  --livion-texto-secundario: #475569;
+  --livion-texto-apoio: #78716C;
+  --livion-dock-bg: rgba(250, 248, 245, 0.92);
+  --livion-dock-borda: rgba(109, 40, 217, 0.25);
+  --livion-header-bg: rgba(250, 248, 245, 0.90);
+  color-scheme: light;
+}
+
+/* Padroniza a cor de borda padrão do Tailwind para evitar bordas brancas/cinzas */
+*,
+::before,
+::after {
+  border-color: var(--livion-borda);
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #080C16;
+  color: var(--livion-texto-principal);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#livion-viewport {
+  background-color: var(--livion-bg-fundo);
+  color: var(--livion-texto-principal);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* No modo Creme Papiro, o wordmark (que tem letras claras) recebe inversão
+   elegante para Grafite/Índigo mantendo a folha âmbar viva */
+html.tema-papiro .wordmark-adaptavel {
+  filter: invert(0.86) hue-rotate(180deg) saturate(1.4);
+}
+
+/* Animações suaves do Design System */
+@keyframes livion-surgir {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animar-surgir {
+  animation: livion-surgir 0.3s ease-out both;
+}
+
+@keyframes livion-carregar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.animar-carregar {
+  animation: livion-carregar 1.5s ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animar-surgir,
+  .animar-carregar {
+    animation: none;
+  }
+}
+
+/* Oculta scrollbar visual mantendo rolagem fluida */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Modos de Conforto Visual do Leitor Imersivo (RN03.2) */
+.filtro-canvas-original {
+  filter: sepia(0.08) contrast(0.97) brightness(0.98);
+}
+
+.filtro-canvas-sepia {
+  filter: sepia(0.32) contrast(0.95) brightness(0.97);
+}
+
+.filtro-canvas-noturno {
+  filter: invert(0.9) hue-rotate(180deg) contrast(0.92) brightness(0.95);
+}

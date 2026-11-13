@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Livion — Leitura que vira hábito",
+  "short_name": "Livion",
+  "description": "Leia clássicos e seus próprios PDFs offline, mantenha sua chama diária acesa e evolua com a comunidade.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "lang": "pt-BR",
+  "categories": ["books", "education", "social"],
+  "icons": [
+    { "src": "/marca/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/marca/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/marca/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

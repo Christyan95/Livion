@@ -1,0 +1,15 @@
+# ==============================================================================
+# GITLEAKS CONFIGURATION — LIVION PWA (Zero Hardcoded Secrets Gate)
+# ==============================================================================
+title = "Gitleaks Configuration for Livion"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Permite arquivos de exemplo de configuração, lockfiles e fixtures de teste"
+paths = [
+  '''\.env\.example$''',
+  '''package-lock\.json$''',
+  '''testes/.*'''
+]

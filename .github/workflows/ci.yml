@@ -1,0 +1,88 @@
+name: "CI · Quality & Security Gates"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  secret-scan:
+    name: "01 · Secret Scanning (Gitleaks)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    steps:
+      - name: "Checkout do Código"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Executar Varredura Gitleaks"
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  quality-and-tests:
+    name: "02 · Typecheck, Lint & Testes Unitários"
+    needs: [secret-scan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node.js 22 (LTS) & Cache npm"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: "Instalação Determinística de Dependências"
+        run: npm ci
+
+      - name: "Checagem Estática de Tipagem (TypeScript)"
+        run: npm run typecheck
+
+      - name: "Análise Estática de Código (ESLint)"
+        run: npm run lint
+
+      - name: "Execução da Suíte de Testes Automatizados (Vitest)"
+        run: npm run test
+
+  build-validation:
+    name: "03 · Compilação Determinística (Next.js Build)"
+    needs: [quality-and-tests]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+      NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node.js 22 (LTS) & Cache npm"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: "Instalação Determinística de Dependências"
+        run: npm ci
+
+      - name: "Compilação de Produção (next build)"
+        run: npm run build
+
